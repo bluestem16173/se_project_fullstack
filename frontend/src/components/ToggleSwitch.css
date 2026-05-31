@@ -1,0 +1,84 @@
+.toggle-switch {
+    width: 56px;
+    height: 29px;
+    border: 3px solid #7e7e7e;
+    border-radius: 20px;
+    padding: 0 2px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    flex-shrink: 0;
+    margin-left: 10px;
+}
+    
+
+
+.toggle-switch__checkbox {
+    visibility: hidden;
+    position: absolute;
+
+}
+
+
+.toggle-switch__circle {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    background-color: black;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    z-index: 0;
+    transition: transform 0.3s ease;
+    transform: translateX(0);
+}
+.toggle-switch__circle:hover {
+    cursor: pointer;
+    transform: translateX(2px);
+}
+
+.toggle-switch_on .toggle-switch__circle {
+    transform: translateX(calc(50px - 26px));
+}
+
+
+.toggle-switch__label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    cursor: pointer;
+    margin: 0;
+}
+
+.toggle-switch__value {
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 700;
+    z-index: 2;
+    font-family: Cabinet Grotesk, sans-serif;
+    pointer-events: none;
+    transition: color 0.3s ease;
+}
+
+.toggle-switch__value_left {
+    margin-right: auto;
+    color: white;
+}
+
+.toggle-switch__value_right {
+    margin-left: auto;
+    color: black;
+}
+
+.toggle-switch_on .toggle-switch__value_left {
+    color: black;
+}
+
+.toggle-switch_on .toggle-switch__value_right {
+    color: white;
+}

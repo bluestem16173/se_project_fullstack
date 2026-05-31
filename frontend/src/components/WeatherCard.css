@@ -1,0 +1,42 @@
+.weather-card{
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+     position: relative;
+
+}
+
+
+
+.weather-card__image{
+    width: 100%;
+    max-width: 100%;
+    min-height: 80px;
+    object-fit: cover;
+    object-position: right top; /* Adjust percentage (70-80%) to show more right side */
+    display: block;
+    border-radius: 12px ;
+    padding-top: 28px;
+   
+
+}
+
+.weather-card__temp{
+    position: absolute;
+    font-size: 36px;
+    line-height: 1.1;
+    margin: 0;
+    left: 36px;
+    top: 50px;
+    bottom: 50px;
+    color : white;
+}
+
+/* Optional: Adjust for smaller screens to show more of the image */
+@media (max-width: 768px) {
+    .weather-card__image {
+        object-position: right /* Show more right portion on mobile */
+    }
+    
+}

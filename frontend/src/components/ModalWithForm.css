@@ -1,0 +1,180 @@
+/* Modal overlay/backdrop - shared with ItemModal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: visibility 0.3s, opacity 0.3s;
+}
+
+.modal.modal_is-opened {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Modal container */
+.modal__container {
+  position: relative;
+  background-color: white;
+  border-radius: 16px;
+  padding: 0;
+  max-width: 496px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+/* Close button */
+.modal__close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 40px;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  z-index: 1001;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+}
+
+.modal__close-btn:hover {
+  color: rgba(0, 0, 0, 0.8);
+  opacity: 1;
+}
+
+/* Modal form */
+.modal__form {
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.modal__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #000;
+}
+
+/* Form fields */
+.modal__form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modal__label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #000;
+}
+
+.modal__label-text {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #000;
+}
+
+.modal__input {
+  padding: 8px 0;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  font-size: 16px;
+  font-weight: 400;
+  font-family: inherit;
+  color: #000;
+  background: transparent;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.modal__input::placeholder {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.modal__input:focus {
+  border-bottom-color: #000;
+}
+
+/* Radio button group */
+.modal__radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.modal__radio-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000;
+  cursor: pointer;
+}
+
+.modal__radio {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: #000;
+}
+
+.modal__radio-label span {
+  user-select: none;
+}
+
+/* Submit button */
+.modal__submit-btn {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  padding: 0;
+  max-width: 124px;
+  height: 44px;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.3s, background-color 0.3s;
+}
+
+.modal__submit-btn:hover {
+  opacity: 0.8;
+  background-color: blue
+}
+
+.modal__submit-btn:active {
+  opacity: 0.6;
+}
+
+

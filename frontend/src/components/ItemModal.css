@@ -1,0 +1,120 @@
+/* Modal overlay/backdrop */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: visibility 0.3s, opacity 0.3s;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.modal.modal_is-opened {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Modal container */
+.modal__container {
+  position: relative;
+  background-color: white;
+  border-radius: 16px;
+  padding: 0;
+  max-width: 498px;
+  max-height: 610px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Close button */
+.modal__close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 40px;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  z-index: 1001;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+}
+
+.modal__close-btn:hover {
+  color: rgba(0, 0, 0, 0.8);
+}
+.modal__delete-btn {
+  color: rgba(255, 77, 0, 1);
+  background-color: white;
+  width: 98.12px;
+  height: 13.662px;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 700;
+  padding: 0;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-right: 33px;
+}
+/* Modal image */
+.modal__image {
+  width: 100%;
+  height: 498px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Modal footer */
+.modal__footer {
+  padding: 20px 32px 32px;
+}
+
+.modal__header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.modal__text {
+  margin: 0;
+  margin-top: 0;
+  padding-bottom: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #000;
+}
+.modal__text-weather{
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #000;
+  padding-bottom: 32px;
+}
+
+.modal__footer .modal__text:last-child {
+  margin-top: 12px;
+  font-weight: 400;
+  font-size: 20px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+

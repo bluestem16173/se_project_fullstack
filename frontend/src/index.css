@@ -1,0 +1,14 @@
+@import url(./vendor/normalize.css);
+@import url(../src/assets/fonts/fonts.css);
+
+/* Component CSS imports */
+@import url(./components/App.css);
+@import url(./components/AddItemModal.css);
+@import url(./components/Footer.css);
+@import url(./components/ItemCard.css);
+@import url(./components/ItemModal.css);
+@import url(./components/ModalWithForm.css);
+@import url(./components/ToggleSwitch.css);
+@import url(./components/WeatherCard.css);
+@import url(./components/header.css);
+@import url(./components/main.css);

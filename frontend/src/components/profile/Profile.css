@@ -1,0 +1,18 @@
+.profile {
+  display: flex;
+  align-items: flex-start;
+  gap: 116px;
+  padding: 20px;
+  min-height: calc(100vh - 200px); /* Adjust based on header/footer height */
+}
+
+/* Sidebar stays on the left */
+.profile > :first-child {
+  flex-shrink: 0;
+}
+
+/* ClothesSection takes remaining space */
+.profile > :last-child {
+  flex: 1;
+}
+

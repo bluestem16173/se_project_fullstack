@@ -1,0 +1,11 @@
+.app{
+    margin: 0  auto;
+    max-width: 1360px;
+    padding: 32px 40px 24px;
+    font-family: "CabinetGrotesk", sans-serif;
+    font-weight: 500;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+} 
+

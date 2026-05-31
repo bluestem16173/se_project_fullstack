@@ -1,0 +1,105 @@
+/* AddItemModal specific styles */
+/* Base styles are inherited from ModalWithForm.css */
+
+/* Form field spacing adjustments */
+.modal__form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Input field styling enhancements */
+.modal__input {
+  padding: 8px 0;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  font-size: 16px;
+  font-weight: 400;
+  font-family: inherit;
+  color: #000;
+  background: transparent;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.modal__input::placeholder {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.modal__input:focus {
+  border-bottom-color: #000;
+}
+
+.modal__input_error {
+  border-bottom-color: rgba(255, 77, 0, 1) !important;
+}
+
+.modal__input_error:focus {
+  border-bottom-color: rgba(255, 77, 0, 1) !important;
+}
+
+.modal__error {
+  color: rgba(255, 77, 0, 1);
+  font-size: 12px;
+  font-weight: 400;
+  margin-top: 4px;
+  display: block !important;
+  min-height: 16px;
+  line-height: 1.2;
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Radio button group styling */
+.modal__radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.modal__radio-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.modal__radio-label:hover {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.modal__radio {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: #000;
+}
+
+.modal__radio-label span {
+  user-select: none;
+}
+
+/* Label text styling */
+.modal__label-text {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #000;
+}
+
+/* Form label styling */
+.modal__label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #000;
+}
+

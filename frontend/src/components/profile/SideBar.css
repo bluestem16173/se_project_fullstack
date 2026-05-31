@@ -1,0 +1,28 @@
+.sidebar {
+  min-width: 200px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  padding: 0;
+  padding-left: 20px;
+  margin-top: calc(40px + 47px - 20px);
+  /* Avatar positioned 47px below WTWR icon, adjusted up by 20px */
+}
+
+.sidebar__username {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.sidebar__avatar {
+  max-width: 229px;
+  width: auto;
+  height: 56px;
+  object-fit: cover;
+}
+
+

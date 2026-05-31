@@ -1,0 +1,43 @@
+.clothes-section-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px;
+  /* Aligns "Your Items" with sidebar content */
+}
+
+.clothes-section__header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 16px;
+  margin-top: calc(40px + 47px);
+  /* Aligned with sidebar avatar/username */
+}
+
+.clothes-section__title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.clothes-section__add-clothes-icon {
+  cursor: pointer;
+}
+
+.clothes-section__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 21px;
+  row-gap: 20px;
+  margin-top: 16px;
+  /* 3-column grid layout for clothing items */
+}
+
+.clothes-section__grid .item-card {
+  width: 328px;
+  height: 328px;
+}
+
