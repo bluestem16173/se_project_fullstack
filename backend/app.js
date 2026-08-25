@@ -6,12 +6,19 @@ const cors = require("cors");
 const usersRouter = require("./routes/users");
 const clothingItemsRouter = require("./routes/clothingItem");
 const errorHandler = require("./utils/errors");
+const User = require("./models/user");
 
 const app = express();
 const { PORT = 3001 } = process.env;
-const { createUser, login } = require("./controllers/users");
+const { createUser, login } = require("./controllers/auth");
 
-mongoose.connect("mongodb://127.0.0.1:27017/wtwr_db");
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => console.log("Connected to MongoDB Atlas"))
+  .catch((err) => {
+    console.error("MongoDB connection error:", err);
+    process.exit(1);
+  });
 
 app.use(
   cors({
@@ -40,6 +47,20 @@ app.use("/items", clothingItemsRouter);
 // health check
 app.get("/", (req, res) => {
   res.send({ message: "Express service is running 🚀" });
+});
+
+app.get("/test-db", async (req, res, next) => {
+  try {
+    const users = await User.find({});
+    res.json({
+      connected: true,
+      db: mongoose.connection.name,
+      userCount: users.length,
+      users,
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 const NotFoundError = require("./utils/errors/NotFoundError");
