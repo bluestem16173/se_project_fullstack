@@ -3,17 +3,33 @@ import SideBar from './SideBar'
 import ClothesSection from '../ClothesSection'
 import './Profile.css'
 
-const Profile = ({ clothingItems = [], handleOpenItemModal, handleOpenAddGarmentModal }) => {
+function LogoutButton({ handleLogout }) {
+  return (
+    <button type="button" onClick={handleLogout}>
+      Sign out
+    </button>
+  );
+}
+
+function Profile({
+  clothingItems,
+  handleOpenItemModal,
+  handleOpenAddGarmentModal,
+  handleLogout,
+}) {
   return (
     <div className="profile">
       <SideBar />
-      <ClothesSection 
+
+      <ClothesSection
         clothingItems={clothingItems}
         handleOpenItemModal={handleOpenItemModal}
         handleOpenAddGarmentModal={handleOpenAddGarmentModal}
       />
+
+      <LogoutButton handleLogout={handleLogout} />
     </div>
-  )
+  );
 }
 
 export default Profile

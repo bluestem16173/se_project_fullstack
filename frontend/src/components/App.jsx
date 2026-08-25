@@ -11,6 +11,10 @@ import { CurrentTemperatureUnitProvider, useCurrentTemperatureUnit } from '../Co
 import {Routes, Route} from 'react-router-dom';
 import Profile from './profile/Profile';
 import AddItemModal from './AddItemModal'
+import RegisterModal from "./RegisterModal";
+import LoginModal from "./LoginModal";
+import { register, authorize, checkToken } from "../utils/auth";
+import CurrentUserContext from '../Contexts/CurrentUserContext';
 
 function AppContent() {
   const { currentTemperatureUnit, handleToggleSwitchChange } = useCurrentTemperatureUnit();
@@ -21,10 +25,47 @@ function AppContent() {
   const [weatherData, setWeatherData] = useState(null);
   const isToggleSwitchOn = currentTemperatureUnit === 'C';
   const [isLoadingLocation, setIsLoadingLocation] = useState(true);
+  const [locationError, setLocationError] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const[currentUser, setCurrentUser] = useState(null);
+  
+
+
   function handleOpenAddGarmentModal() {
     setActiveModal('add-garment-modal');
   }
+  function handleAuthorization(values) {
+    return authorize({
+      email: values.email,
+      password: values.password,
+    })
+      .then((data) => {
+        localStorage.setItem("jwt", data.token);
   
+        return checkToken(data.token);
+      })
+      .then((userData) => {
+        setCurrentUser(userData);
+        setIsLoggedIn(true);
+        handleCloseModal();
+      })
+      .catch((err) => {
+        console.error("Authorization failed:", err);
+      });
+  }
+  
+  function handleRegistration(values) {
+    return register(values)
+      .then(() => {
+        return handleAuthorization({
+          email: values.email,
+          password: values.password,
+        });
+      })
+      .catch((err) => {
+        console.error("Registration failed:", err);
+      });
+  }
   async function handleAddItemSubmit(values) {
     console.log('handleAddItemSubmit called with values:', values);
     const newGarment = {
@@ -160,165 +201,202 @@ function AppContent() {
   function handleOpenItemModal(card) {
     setSelectedCard(card);
     setActiveModal('item-modal');
-  }
-
-  useEffect(() => {
+  }useEffect(() => {
     const loadData = async () => {
+      // Restore user authentication
+      const token = localStorage.getItem("jwt");
+  
+      if (token) {
+        try {
+          const userData = await checkToken(token);
+          setCurrentUser(userData);
+          setIsLoggedIn(true);
+        } catch (authErr) {
+          console.error("Token validation failed:", authErr);
+          localStorage.removeItem("jwt");
+        }
+      }
+  
       try {
         console.log("Starting data load...");
-      
-        
-         // Get user coordinates using Geolocation API
+  
+        // Get user coordinates
         setIsLoadingLocation(true);
         const coordinates = await getUserCoordinates();
         setIsLoadingLocation(false);
-        console.log("Coordinates obtained:", coordinates);
-        
-
-        let weatherData = null;
+  
+        let loadedWeatherData = null;
         let items = [];
-        
+  
+        // Get weather
         try {
-          console.log("Fetching weather data...");
-          weatherData = await fetchweatherdata(coordinates);
-          console.log("Weather data received:", weatherData);
-          setWeatherData(weatherData);
+          loadedWeatherData = await fetchweatherdata(coordinates);
+          setWeatherData(loadedWeatherData);
         } catch (weatherErr) {
           console.error("Weather API error:", weatherErr);
-          console.error("Weather error message:", weatherErr.message);
         }
-        
-        // Check if we're in production (GitHub Pages) - use mock data
-        // In development, use json-server
-        const isProduction = import.meta.env.PROD || window.location.hostname !== 'localhost';
-        
+  
+        // Determine production/development
+        const isProduction =
+          import.meta.env.PROD ||
+          window.location.hostname !== "localhost";
+  
         if (isProduction) {
-          // Use default clothing items for GitHub Pages
           console.log("Using default clothing items for production");
-          items = defaultClothingItems.map(item => ({
+  
+          items = defaultClothingItems.map((item) => ({
             ...item,
-            imageUrl: item.link || item.imageUrl, // Normalize field name
-            _id: item._id
+            imageUrl: item.link || item.imageUrl,
+            _id: item._id,
           }));
-          console.log("Items loaded from default data:", items.length);
         } else {
-          // Use json-server in development
           try {
-            console.log("Fetching items from http://localhost:3001/items...");
-            const itemsRes = await fetch("http://localhost:3001/items", {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            });
-            console.log("Items response status:", itemsRes.status, itemsRes.statusText);
-            
+            console.log(
+              "Fetching items from http://localhost:3001/items..."
+            );
+  
+            const itemsRes = await fetch(
+              "http://localhost:3001/items",
+              {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+  
             if (!itemsRes.ok) {
-              const errorText = await itemsRes.text();
-              console.error("Response error text:", errorText);
-              throw new Error(`Items fetch failed: ${itemsRes.status} ${itemsRes.statusText}`);
+              throw new Error(
+                `Items fetch failed: ${itemsRes.status} ${itemsRes.statusText}`
+              );
             }
-    
-            const responseText = await itemsRes.text();
-            console.log("Response text preview:", responseText.substring(0, 200));
-            items = JSON.parse(responseText);
-            console.log("Items parsed:", items);
-            console.log("Number of items:", items.length);
-            
+  
+            items = await itemsRes.json();
+  
             if (!Array.isArray(items)) {
               console.error("Items is not an array:", items);
               items = [];
             }
           } catch (fetchError) {
-            console.warn("Failed to fetch from json-server, using default items:", fetchError);
-            // Fallback to default items if json-server is not available
-            items = defaultClothingItems.map(item => ({
+            console.warn(
+              "Failed to fetch from server, using default items:",
+              fetchError
+            );
+  
+            items = defaultClothingItems.map((item) => ({
               ...item,
               imageUrl: item.link || item.imageUrl,
-              _id: item._id
+              _id: item._id,
             }));
           }
         }
-        
+  
         setAllClothingItems(items);
-        
-        if (weatherData && weatherData.temp !== undefined) {
-          const weatherCondition = getWeatherCondition(weatherData.temp);
-          console.log("Weather condition:", weatherCondition, "from temp:", weatherData.temp);
-          const filtered = items.filter(
-            (item) => item.weather?.toLowerCase() === weatherCondition.toLowerCase()
+  
+        if (
+          loadedWeatherData &&
+          loadedWeatherData.temp !== undefined
+        ) {
+          const weatherCondition = getWeatherCondition(
+            loadedWeatherData.temp
           );
-          console.log("Filtered items:", filtered);
+  
+          const filtered = items.filter(
+            (item) =>
+              item.weather?.toLowerCase() ===
+              weatherCondition.toLowerCase()
+          );
+  
           setClothingItems(filtered);
         } else {
-          console.log("No weather data, showing all items");
           setClothingItems(items);
         }
       } catch (err) {
         console.error("Error loading data:", err);
+        setIsLoadingLocation(false);
       }
     };
+    function handleOpenLoginModal() {
+      setActiveModal("login");
+    }
+    
+    function handleOpenRegisterModal() {
+      setActiveModal("register");
+    }
+    const handleLogout = () => {
+      localStorage.removeItem("jwt");
+      setIsLoggedIn(false);
+      setCurrentUser({});
+    };
+  
     loadData();
   }, []);
   return (
-    <div className="app">
-      <Header
-        handleOpenAddGarmentModal={handleOpenAddGarmentModal}
-        weatherData={weatherData}
-        isToggleSwitchOn={isToggleSwitchOn}
-        onToggleSwitchChange={handleToggleSwitchChange}
-      />
-      <Routes>
-        <Route 
-          path="/" 
-          element={
-            <Main 
-              clothingItems={clothingItems} 
-              handleOpenItemModal={handleOpenItemModal} 
-              weatherData={weatherData}
-            />
-          } 
+    <CurrentUserContext.Provider value={currentUser}>
+      <div className="app">
+        <Header
+          handleOpenAddGarmentModal={handleOpenAddGarmentModal}
+          weatherData={weatherData}
+          isToggleSwitchOn={isToggleSwitchOn}
+          onToggleSwitchChange={handleToggleSwitchChange}
+          isLoggedIn={isLoggedIn}
+          handleOpenLoginModal={handleOpenLoginModal}
+          handleOpenRegisterModal={handleOpenRegisterModal}
         />
-        <Route 
-          path="/profile" 
-          element={
-            <Profile 
-              clothingItems={allClothingItems}
-              handleOpenItemModal={handleOpenItemModal}
-              handleOpenAddGarmentModal={handleOpenAddGarmentModal}
-            />
-          }
+  
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Main
+                clothingItems={clothingItems}
+                handleOpenItemModal={handleOpenItemModal}
+                weatherData={weatherData}
+              />
+            }
+          />
+  
+          <Route
+            path="/profile"
+            element={
+              <Profile
+                clothingItems={allClothingItems}
+                handleOpenItemModal={handleOpenItemModal}
+                handleOpenAddGarmentModal={handleOpenAddGarmentModal}
+                handleLogout={handleLogout}
+              />
+            }
+          />
+        </Routes>
+  
+        <Footer />
+  
+        {/* Modals - always rendered, controlled by isOpen prop */}
+        <AddItemModal
+          isOpen={activeModal === "add-garment-modal"}
+          onClose={handleCloseModal}
+          onSubmit={handleAddItemSubmit}
         />
-      </Routes>
-      <Footer />
-      
-      {/* Modals - always rendered, controlled by isOpen prop */}
-      <AddItemModal
-        isOpen={activeModal === 'add-garment-modal'}
-        onClose={handleCloseModal}
-        onSubmit={handleAddItemSubmit}
-      />
-      
-      <ItemModal 
-        isOpen={activeModal === 'item-modal'}
-        card={selectedCard}
-        onClose={handleCloseModal}
-        onDelete={handleDeleteItem}
-      />
-    </div>
-  )
-}
-
-function App() {
-  return (
-    <CurrentTemperatureUnitProvider>
-      <AppContent />
-    </CurrentTemperatureUnitProvider>
+  
+        <ItemModal
+          isOpen={activeModal === "item-modal"}
+          card={selectedCard}
+          onClose={handleCloseModal}
+          onDelete={handleDeleteItem}
+        />
+      </div>
+    </CurrentUserContext.Provider>
   );
-}
-
-export default App
-
-
+  }
+  
+  function App() {
+    return (
+      <CurrentTemperatureUnitProvider>
+        <AppContent />
+      </CurrentTemperatureUnitProvider>
+    );
+  }
+  
+  export default App;
 
 

@@ -2,8 +2,16 @@ import React from 'react'
 import ItemCard from './ItemCard'
 import './ClothesSection.css'
 import addnew from '../assets/images/+ Addnew.svg'
+import { useContext } from 'react';
+import CurrentUserContext from '../Contexts/CurrentUserContext';
 
 const ClothesSection = ({ clothingItems = [], handleOpenItemModal, handleOpenAddGarmentModal }) => {
+  const currentUser = useContext(CurrentUserContext);
+
+  const ownClothingItems = clothingItems.filter(
+    (item) => item.owner === currentUser?._id
+  );
+
   return (
     <div className="clothes-section-wrapper">
       <div className="clothes-section__header">
@@ -17,8 +25,8 @@ const ClothesSection = ({ clothingItems = [], handleOpenItemModal, handleOpenAdd
         />
       </div>
       <div className="clothes-section__grid">
-        {clothingItems.length > 0 ? (
-          clothingItems.map((item) => (
+      {ownClothingItems.length > 0 ? (
+        ownClothingItems.map((item) => (
             <ItemCard
               key={item._id}
               name={item.name}
