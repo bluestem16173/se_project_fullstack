@@ -78,3 +78,15 @@
         transform: scale(1);
     }
 }
+.header__avatar-placeholder {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    background-color: #545454;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+}

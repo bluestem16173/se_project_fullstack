@@ -1,6 +1,18 @@
+import { useForm } from "../hooks/useForm"; //import useForm hook
 import ModalWithForm from "./ModalWithForm";
 
 function LoginModal({ isOpen, onClose, onSubmit }) {
+  const { values, handleChange, resetForm } = useForm({
+    email: "",
+    password: "",
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(values);
+    resetForm();
+  };
+
   return (
     <ModalWithForm
       isOpen={isOpen}
@@ -8,7 +20,7 @@ function LoginModal({ isOpen, onClose, onSubmit }) {
       title="Log in"
       name="login"
       buttonText="Log in"
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit}
     >
       <div className="modal__form-field">
         <label className="modal__label" htmlFor="login-email-input">
@@ -20,6 +32,8 @@ function LoginModal({ isOpen, onClose, onSubmit }) {
           name="email"
           type="email"
           placeholder="Email"
+          value={values.email}
+          onChange={handleChange}
         />
       </div>
 
@@ -33,6 +47,8 @@ function LoginModal({ isOpen, onClose, onSubmit }) {
           name="password"
           type="password"
           placeholder="Password"
+          value={values.password}
+          onChange={handleChange}
         />
       </div>
     </ModalWithForm>

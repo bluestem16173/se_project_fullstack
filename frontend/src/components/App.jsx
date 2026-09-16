@@ -15,6 +15,7 @@ import RegisterModal from "./RegisterModal";
 import LoginModal from "./LoginModal";
 import { register, authorize, checkToken } from "../utils/auth";
 import CurrentUserContext from '../Contexts/CurrentUserContext';
+import ProtectedRoute from './ProtectedRoute';
 
 function AppContent() {
   const { currentTemperatureUnit, handleToggleSwitchChange } = useCurrentTemperatureUnit();
@@ -67,6 +68,11 @@ function AppContent() {
       });
   }
   async function handleAddItemSubmit(values) {
+    const token = localStorage.getItem("jwt");
+    if (!token) {
+      console.error("No token found, cannot add item");
+      return;
+    } else {
     console.log('handleAddItemSubmit called with values:', values);
     const newGarment = {
       name: values.name.trim(),
@@ -116,7 +122,10 @@ function AppContent() {
         console.log('Sending POST request to http://localhost:3001/items');
         const response = await fetch('http://localhost:3001/items', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            authorization: `Bearer ${token}`,
+          },
           body: JSON.stringify(newGarment),
         });
         
@@ -160,9 +169,15 @@ function AppContent() {
         alert(`Failed to add item: ${error.message}`);
       }
     }
+    }
   }
 
   async function handleDeleteItem(id) {
+    const token = localStorage.getItem("jwt");
+    if (!token) {
+      console.error("No token found, cannot delete item");
+      return;
+    } else {
     // Check if we're in production (GitHub Pages)
     const isProduction = import.meta.env.PROD || window.location.hostname !== 'localhost';
     
@@ -178,6 +193,9 @@ function AppContent() {
       try {
         const response = await fetch(`http://localhost:3001/items/${id}`, {
           method: 'DELETE',
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
         });
         if (!response.ok) {
           throw new Error(`Failed to delete item: ${response.statusText}`);
@@ -191,6 +209,7 @@ function AppContent() {
         console.error('Error deleting item:', error);
       }
     }
+    }
   }
   
   function handleCloseModal() {
@@ -201,7 +220,23 @@ function AppContent() {
   function handleOpenItemModal(card) {
     setSelectedCard(card);
     setActiveModal('item-modal');
-  }useEffect(() => {
+  }
+
+  function handleOpenLoginModal() {
+    setActiveModal("login");
+  }
+
+  function handleOpenRegisterModal() {
+    setActiveModal("register");
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem("jwt");
+    setIsLoggedIn(false);
+    setCurrentUser({});
+  };
+
+  useEffect(() => {
     const loadData = async () => {
       // Restore user authentication
       const token = localStorage.getItem("jwt");
@@ -316,19 +351,6 @@ function AppContent() {
         setIsLoadingLocation(false);
       }
     };
-    function handleOpenLoginModal() {
-      setActiveModal("login");
-    }
-    
-    function handleOpenRegisterModal() {
-      setActiveModal("register");
-    }
-    const handleLogout = () => {
-      localStorage.removeItem("jwt");
-      setIsLoggedIn(false);
-      setCurrentUser({});
-    };
-  
     loadData();
   }, []);
   return (
@@ -359,12 +381,14 @@ function AppContent() {
           <Route
             path="/profile"
             element={
-              <Profile
-                clothingItems={allClothingItems}
-                handleOpenItemModal={handleOpenItemModal}
-                handleOpenAddGarmentModal={handleOpenAddGarmentModal}
-                handleLogout={handleLogout}
-              />
+              <ProtectedRoute isLoggedIn={isLoggedIn}>
+                <Profile
+                  clothingItems={allClothingItems}
+                  handleOpenItemModal={handleOpenItemModal}
+                  handleOpenAddGarmentModal={handleOpenAddGarmentModal}
+                  handleLogout={handleLogout}
+                />
+              </ProtectedRoute>
             }
           />
         </Routes>
@@ -376,6 +400,18 @@ function AppContent() {
           isOpen={activeModal === "add-garment-modal"}
           onClose={handleCloseModal}
           onSubmit={handleAddItemSubmit}
+        />
+
+        <RegisterModal
+          isOpen={activeModal === "register"}
+          onClose={handleCloseModal}
+          onSubmit={handleRegistration}
+        />
+
+        <LoginModal
+          isOpen={activeModal === "login"}
+          onClose={handleCloseModal}
+          onSubmit={handleAuthorization}
         />
   
         <ItemModal

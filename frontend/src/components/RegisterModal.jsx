@@ -1,6 +1,18 @@
 import ModalWithForm from "./ModalWithForm";
+import { useForm } from "../hooks/useForm"; //import useForm hook
 
 function RegisterModal({ isOpen, onClose, onSubmit }) {
+  const { values, handleChange, resetForm } = useForm({
+    email: "",
+    password: "",
+    name: "",
+    avatar: "",
+  });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(values);
+    resetForm();
+  };
   return (
     <ModalWithForm
       isOpen={isOpen}
@@ -8,7 +20,7 @@ function RegisterModal({ isOpen, onClose, onSubmit }) {
       title="Sign up"
       name="register"
       buttonText="Sign up"
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit}
     >
       <div className="modal__form-field">
         <label className="modal__label" htmlFor="register-email-input">
@@ -20,6 +32,8 @@ function RegisterModal({ isOpen, onClose, onSubmit }) {
           name="email"
           type="email"
           placeholder="Email"
+          value={values.email}
+          onChange={handleChange}
         />
       </div>
 
@@ -33,6 +47,8 @@ function RegisterModal({ isOpen, onClose, onSubmit }) {
           name="password"
           type="password"
           placeholder="Password"
+          value={values.password}
+          onChange={handleChange}
         />
       </div>
 
@@ -46,6 +62,8 @@ function RegisterModal({ isOpen, onClose, onSubmit }) {
           name="name"
           type="text"
           placeholder="Name"
+          value={values.name}
+          onChange={handleChange}
         />
       </div>
 
@@ -59,6 +77,8 @@ function RegisterModal({ isOpen, onClose, onSubmit }) {
           name="avatar"
           type="url"
           placeholder="Avatar URL"
+          value={values.avatar}
+          onChange={handleChange}
         />
       </div>
     </ModalWithForm>

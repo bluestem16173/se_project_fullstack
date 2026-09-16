@@ -45,13 +45,3 @@ export function checkToken(token) {
     },
   }).then(checkResponse);
 }
-const token = localStorage.getItem("jwt");
-
-fetch(`${baseUrl}/items`, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    authorization: `Bearer ${token}`,
-  },
-  body: JSON.stringify(data),
-});

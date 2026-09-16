@@ -26,3 +26,17 @@
 }
 
 
+
+.sidebar__avatar-placeholder {
+  height: 56px;
+  width: 56px;
+  border-radius: 50%;
+  background-color: #545454;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
