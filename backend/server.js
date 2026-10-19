@@ -2,12 +2,14 @@ require("dotenv").config();
 
 const mongoose = require("mongoose");
 
+const { MONGODB_URI = "mongodb://127.0.0.1:27017/wtwr_db" } = process.env;
+
 async function connectDatabase() {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
+    await mongoose.connect(MONGODB_URI);
 
     console.log(
-      `✅ MongoDB Atlas Connected: ${mongoose.connection.name}`
+      `MongoDB connected: ${mongoose.connection.name}`
     );
   } catch (err) {
     console.error("❌ MongoDB Connection Failed:", err.message);

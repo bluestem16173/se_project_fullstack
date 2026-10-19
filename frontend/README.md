@@ -4,11 +4,17 @@ A weather-based clothing recommendation app built with React.
 
 **Live Site:** https://bluestem16173.github.io/se_project_react/
 
-## Backend Repository
+## Backend
 
-This WTWR frontend is built with React. The backend is built with Node.js and Express, with MongoDB used as the database.
+The Express + MongoDB API for this project lives here:
+https://github.com/bluestem16173/se_project_express
 
-**Backend GitHub Repository:** https://github.com/bluestem16173/se_project_fullstack/tree/main/backend
+### Running the backend locally
+
+1. Clone the backend repo and run `npm install`
+2. Start MongoDB locally (or set `MONGODB_URI` in a `.env` file, see `.env.example`)
+3. Run `npm run start` (or `npm run dev` for hot reload)
+4. The server runs on `http://localhost:3001`
 
 ## Features
 

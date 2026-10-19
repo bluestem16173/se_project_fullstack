@@ -9,12 +9,15 @@ const errorHandler = require("./utils/errors");
 const User = require("./models/user");
 
 const app = express();
-const { PORT = 3001 } = process.env;
+const {
+  MONGODB_URI = "mongodb://127.0.0.1:27017/wtwr_db",
+  PORT = 3001,
+} = process.env;
 const { createUser, login } = require("./controllers/auth");
 
 mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => console.log("Connected to MongoDB Atlas"))
+  .connect(MONGODB_URI)
+  .then(() => console.log("Connected to MongoDB"))
   .catch((err) => {
     console.error("MongoDB connection error:", err);
     process.exit(1);
